@@ -60,3 +60,85 @@ const badgeFavs = document.getElementById("badge-favs");
 
 
 // continua com as funções aq embaixo
+
+    // ainda vou renderizar os cards aqui, mas é mais chatinho e não consigo fazer agora
+
+function renderizarFavoritos() {
+
+    favsList.innerHTML = "";
+    if (favoritos.lenght === 0) {
+        favsEmpty.style.display = "block";
+        return;
+    }
+
+    favsEmpty.style.display = "none";
+
+    favoritos.forEach(pet => {
+
+        const item = document.createElement("li");
+
+        item.innerHTML = `
+            <strong>${pet.nome}</strong><br>
+            ${pet.especie} • ${pet.idade}
+            <br><br>
+            <button class="btn btn--ghost" onclick="removerFavorito(${pet.id})">Remover</button>
+        `;
+
+        favsList.appendChild(item);
+    });
+
+}
+
+function addFavorito(id) {
+
+    const pet = pets.find(item => item.id === id);
+
+    if (!pet) return;
+
+    const jaTem = favoritos.some(item => item.id === id);
+
+    if (jaTem) return;
+
+    favoritos.push(pet);
+    salvarDados();
+
+    renderizarFavoritos();
+    // mensagem de add
+}
+
+function removerFavorito(id) {
+    favoritos = favoritos.filter(item => item.id !== id);
+
+    salvarDados();
+    renderizarFavoritos();
+    // mensagem de removido
+}
+
+window.addFavorito = addFavorito;
+window.removerFavorito = removerFavorito;
+
+
+// AREA DE EVENTOS (EM TESTE AINDA)
+
+btnAbrirFavs.addEventListener("click", () => {
+    sidebar.classList.add("open");
+    sidebarOverlay.hidden = false;
+});
+
+btnFecharFavs.addEventListener("click", () => {
+    sidebar.classList.remove("open");
+    sidebarOverlay.hidden = true;
+});
+
+sidebarOverlay.addEventListener("click", () => { // esse aqui é pra fechar clicando fora da barra (no overlay)
+    sidebar.classList.remove("open");
+    sidebarOverlay.hidden = true;
+});
+
+
+
+
+// final de tudo tem que ficar renderizando
+
+
+renderizarFavoritos();
