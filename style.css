@@ -1,7 +1,3 @@
-/* ============================================================
-   CONEXÃO PET — style.css
-   ============================================================ */
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -36,7 +32,9 @@ body {
   min-height: 100vh;
 }
 
-/* ========== NAVBAR ========== */
+
+
+
 .navbar {
   position: sticky;
   top: 0;
@@ -64,7 +62,9 @@ body {
 
 .navbar__actions { display: flex; align-items: center; gap: .75rem; }
 
-/* ========== BOTÕES ========== */
+
+
+
 .btn {
   font-family: 'Nunito', sans-serif;
   font-weight: 800;
@@ -158,7 +158,10 @@ body {
 }
 .btn--remove:hover { background: var(--error); color: var(--white); }
 
-/* ========== MODAL ========== */
+
+
+
+
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -210,7 +213,10 @@ body {
 }
 .modal__close:hover { background: var(--bg); color: var(--text); }
 
-/* ========== SIDEBAR ========== */
+
+
+
+
 .sidebar-overlay {
   position: fixed;
   inset: 0;
@@ -296,7 +302,10 @@ body {
   line-height: 1.6;
 }
 
-/* ========== FEEDBACK ========== */
+
+
+
+
 .feedback {
   position: fixed;
   top: 1rem;
@@ -319,7 +328,10 @@ body {
 .feedback.success { background: var(--success); color: var(--white); }
 .feedback.error   { background: var(--error);   color: var(--white); }
 
-/* ========== MAIN ========== */
+
+
+
+
 .main {
   max-width: 1140px;
   margin: 0 auto;
@@ -329,7 +341,10 @@ body {
   gap: 1.4rem;
 }
 
-/* ========== STATS ========== */
+
+
+
+
 .stats {
   display: flex;
   background: var(--white);
@@ -365,7 +380,10 @@ body {
   color: var(--text-muted);
 }
 
-/* ========== BARRA DE FILTROS ========== */
+
+
+
+
 .filter-bar {
   background: var(--white);
   border-radius: var(--radius);
@@ -400,14 +418,20 @@ body {
   white-space: nowrap;
 }
 
-/* ========== PETS GRID ========== */
+
+
+
+
 .pets-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.2rem;
 }
 
-/* ========== PET CARD ========== */
+
+
+
+
 .pet-card {
   background: var(--white);
   border-radius: var(--radius);
@@ -475,7 +499,10 @@ img.pet-card__img { display: block; }
   margin-bottom: .4rem;
 }
 
-/* ========== FORMULÁRIO (dentro do modal) ========== */
+
+
+
+
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -525,7 +552,10 @@ textarea { resize: vertical; }
   min-height: 1em;
 }
 
-/* ========== EMPTY STATE ========== */
+
+
+
+
 .empty-state {
   text-align: center;
   padding: 3rem 1rem;
@@ -534,7 +564,10 @@ textarea { resize: vertical; }
   font-weight: 600;
 }
 
-/* ========== FOOTER ========== */
+
+
+
+
 .footer {
   text-align: center;
   padding: 1.6rem 1rem;
@@ -545,7 +578,10 @@ textarea { resize: vertical; }
 }
 .footer strong { color: var(--green-dark); }
 
-/* ========== ANIMAÇÕES ========== */
+
+
+
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -568,7 +604,10 @@ textarea { resize: vertical; }
   100% { transform: scale(1); }
 }
 
-/* ========== RESPONSIVO ========== */
+
+
+
+
 @media (max-width: 900px) {
   .pets-grid { grid-template-columns: repeat(2, 1fr); }
   .sidebar { width: 290px; }
