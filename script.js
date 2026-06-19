@@ -58,15 +58,124 @@ const favsEmpty = document.getElementById("favs-empty");
 
 const badgeFavs = document.getElementById("badge-favs");
 
+//seletores do modal cadastro
+const modalOverlay = document.getElementById("modalOverlay");
+const btnAbrirCadastro = document.getElementById("btn-abrir-cadastro");
+const btnFecharModal = document.getElementById("btn-fechar-modal");
+const formPet = document.getElementById("form-pet");
+
+//formulario
+const inputNome = document.getElementById("nome");
+const selectEspecie = document.getElementById("especie");
+const selectPorte = document.getElementById("porte");
+const selectIdade = document.getElementById("idade");
+const inputFoto = document.getElementById("foto");
+const textDescricao = document.getElementById("descricao");
+
+//elementos estatistica
+const divFeedback = document.getElementById("feedback");
+const statTotal = document.getElementById("stat-total");
+const statFavs = document.getElementById("stat-favs");
 
 // continua com as funções aq embaixo
+// blz wesley :D
 
-    // ainda vou renderizar os cards aqui, mas é mais chatinho e não consigo fazer agora
+function abrirModal(){
+	modalOverlay.hidden = false;
+	inputNome.focus();
+}
+
+function fecharModal(){
+	modalOverlay.hidden = true;
+	formPet.reset();
+	limparErrosValidacao();
+}
+
+function limparErrosValidacao(){
+	const spansErro = document.querySelectorAll(".field__error");
+	spansErro.forEach(span => span.textContent = "");
+}
+
+function mostrarFeedback(mensagem, tipo = "sucesso"){
+	divFeedback.textContent = mensagem;
+	divFeedback.className = 
+	`feedback feedback--show ${tipo === "erro" ? "feedback--erro" : "feedback--sucesso"}`;
+	setTimeout(() => {
+		divFeedback.textContent = "";
+		divFeedback.className = "feedback";
+	}, 3500)
+}
+
+function atualizarEstatisticas(){
+	if (statTotal) statTotal.textContent = pets.length;
+	if (statFavs) statFavs.textContent = favoritos.length;
+	if (badgeFavs) badgeFavs.textContent = favoritos.length;
+}
+
+function executarCadastro(event) {
+    event.preventDefault();
+    limparErrosValidacao();
+
+    const nome = inputNome.value.trim();
+    const especie = selectEspecie.value;
+    const porte = selectPorte.value;
+    const idade = selectIdade.value;
+    const foto = inputFoto.value.trim();
+    const descricao = textDescricao.value.trim();
+
+    let formularioValido = true;
+
+    if (!nome) {
+        document.getElementById("erro-nome").textContent = "O nome é obrigatório.";
+        formularioValido = false;
+    }
+    if (!especie) {
+        document.getElementById("erro-especie").textContent = "Selecione a espécie.";
+        formularioValido = false;
+    }
+    if (!porte) {
+        document.getElementById("erro-porte").textContent = "Selecione o porte.";
+        formularioValido = false;
+    }
+    if (!idade) {
+        document.getElementById("erro-idade").textContent = "Selecione a idade.";
+        formularioValido = false;
+    }
+    if (!descricao) {
+        document.getElementById("erro-descricao").textContent = "A descrição é obrigatória.";
+        formularioValido = false;
+    }
+
+    if (!formularioValido) {
+        mostrarFeedback("Por favor, preencha todos os campos obrigatórios.", "erro");
+        return;
+    }
+
+    const novoPet = {
+        id: Date.now(), // ID numerico
+        nome,
+        especie,
+        porte,
+        idade,
+        foto: foto || "https://placehold.co/400x300?text=Sem+Foto+🐾",
+        descricao
+    };
+
+    pets.push(novoPet);
+    salvarDados();
+
+    fecharModal();
+    atualizarEstatisticas();
+    renderizarPets();
+
+    mostrarFeedback(`O pet ${nome} foi cadastrado com sucesso!`);
+}
+
 
 function renderizarFavoritos() {
 
     favsList.innerHTML = "";
-    if (favoritos.lenght === 0) {
+    if (favoritos.length === 0) {
         favsEmpty.style.display = "block";
         return;
     }
@@ -135,10 +244,23 @@ sidebarOverlay.addEventListener("click", () => { // esse aqui é pra fechar clic
     sidebarOverlay.hidden = true;
 });
 
+btnAbrirCadastro.addEventListener("click", abrirModal);
+btnFecharModal.addEventListener("click", fecharModal);
 
+modalOverlay.addEventListener("click", (event) => {
+	if(event.target === modalOverlay){
+		fecharModal();
+	}
+})
+
+formPet.addEventListener("submit", executarCadastro);
 
 
 // final de tudo tem que ficar renderizando
 
-
 renderizarFavoritos();
+atualizarEstatisticas();
+
+function renderizarPets(){
+	console.log("isto eh somente um place holder para nao quebrar")
+}
