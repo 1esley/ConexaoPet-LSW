@@ -77,6 +77,11 @@ const divFeedback = document.getElementById("feedback");
 const statTotal = document.getElementById("stat-total");
 const statFavs = document.getElementById("stat-favs");
 
+//seletores dos filtros
+const filtroEspecie = document.getElementById("filtro-especie");
+const filtroPorte = document.getElementById("filtro-porte");
+const filtroIdade = document.getElementById("filtro-idade");
+
 // continua com as funções aq embaixo
 // blz wesley :D
 
@@ -261,25 +266,38 @@ modalOverlay.addEventListener("click", (event) => {
 formPet.addEventListener("submit", ejecutarCadastro);
 
 
-// final de tudo tem que ficar renderizando
+// EVENTOS DE FILTRAGEM
 
-renderizarFavoritos();
-renderizarPets();
-atualizarEstatisticas();
+if (filtroEspecie) filtroEspecie.addEventListener("change", renderizarPets);
+if (filtroPorte) filtroPorte.addEventListener("change", renderizarPets);
+if (filtroIdade) filtroIdade.addEventListener("change", renderizarPets);
+
 
 function renderizarPets() {
     if (!petsGrid) return;
 
     petsGrid.innerHTML = "";
 
-    if (pets.length === 0) {
+    const especieSelecionada = filtroEspecie ? filtroEspecie.value : "";
+    const porteSelecionado = filtroPorte ? filtroPorte.value : "";
+    const idadeSelecionada = filtroIdade ? filtroIdade.value : "";
+
+    const petsFiltrados = pets.filter(pet => {
+        const bateEspecie = !especieSelecionada || pet.especie === especieSelecionada;
+        const batePorte = !porteSelecionado || pet.porte === porteSelecionado;
+        const bateIdade = !idadeSelecionada || pet.idade === idadeSelecionada;
+        
+        return bateEspecie && batePorte && bateIdade;
+    });
+
+    if (petsFiltrados.length === 0) {
         emptyState.hidden = false;
         return;
     }
 
     emptyState.hidden = true;
 
-    pets.forEach(pet => {
+    petsFiltrados.forEach(pet => {
         
         const ehFavorito = favoritos.some(fav => fav.id === pet.id);
 
@@ -323,3 +341,10 @@ function alternarFavoritoCard(id){
     }
     renderizarPets();
 }
+
+
+// final de tudo tem que ficar renderizando - INICIALIZAÇÃO DO APP
+
+renderizarFavoritos();
+renderizarPets();
+atualizarEstatisticas();
