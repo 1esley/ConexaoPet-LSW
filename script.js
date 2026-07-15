@@ -38,7 +38,7 @@ function salvarDados() { // só pra garantir que a gente possa atualizar sempre 
     localStorage.setItem("favoritos", JSON.stringify(favoritos));
 }
 
-// aqui agora é CACETE, deixa essa parte só pra ir setando os elementos
+// aqui agora é CACECE, deixa essa parte só pra ir setando os elementos
 
 const petsGrid = document.getElementById("pets-grid");
 
@@ -81,38 +81,38 @@ const statFavs = document.getElementById("stat-favs");
 // blz wesley :D
 
 function abrirModal(){
-	modalOverlay.hidden = false;
-	inputNome.focus();
+    modalOverlay.hidden = false;
+    inputNome.focus();
 }
 
 function fecharModal(){
-	modalOverlay.hidden = true;
-	formPet.reset();
-	limparErrosValidacao();
+    modalOverlay.hidden = true;
+    formPet.reset();
+    limparErrosValidacao();
 }
 
 function limparErrosValidacao(){
-	const spansErro = document.querySelectorAll(".field__error");
-	spansErro.forEach(span => span.textContent = "");
+    const spansErro = document.querySelectorAll(".field__error");
+    spansErro.forEach(span => span.textContent = "");
 }
 
 function mostrarFeedback(mensagem, tipo = "sucesso"){
-	divFeedback.textContent = mensagem;
-	divFeedback.className = 
-	`feedback feedback--show ${tipo === "erro" ? "feedback--erro" : "feedback--sucesso"}`;
-	setTimeout(() => {
-		divFeedback.textContent = "";
-		divFeedback.className = "feedback";
-	}, 3500)
+    divFeedback.textContent = message = mensagem;
+    divFeedback.className = 
+    `feedback feedback--show ${tipo === "erro" ? "feedback--erro" : "feedback--sucesso"}`;
+    setTimeout(() => {
+        divFeedback.textContent = "";
+        divFeedback.className = "feedback";
+    }, 3500)
 }
 
 function atualizarEstatisticas(){
-	if (statTotal) statTotal.textContent = pets.length;
-	if (statFavs) statFavs.textContent = favoritos.length;
-	if (badgeFavs) badgeFavs.textContent = favoritos.length;
+    if (statTotal) statTotal.textContent = pets.length;
+    if (statFavs) statFavs.textContent = favoritos.length;
+    if (badgeFavs) badgeFavs.textContent = favoritos.length;
 }
 
-function executarCadastro(event) {
+function ejecutarCadastro(event) {
     event.preventDefault();
     limparErrosValidacao();
 
@@ -212,14 +212,19 @@ function addFavorito(id) {
     salvarDados();
 
     renderizarFavoritos();
+    atualizarEstatisticas();
+    mostrarFeedback(`${pet.nome} foi adicionado aos favoritos!`);
     // mensagem de add
 }
 
 function removerFavorito(id) {
+    const pet = favoritos.find(item => item.id === id);
     favoritos = favoritos.filter(item => item.id !== id);
 
     salvarDados();
     renderizarFavoritos();
+    atualizarEstatisticas();
+    if (pet) mostrarFeedback(`${pet.nome} foi removido dos favoritos.`, "erro");
     // mensagem de removido
 }
 
@@ -248,19 +253,73 @@ btnAbrirCadastro.addEventListener("click", abrirModal);
 btnFecharModal.addEventListener("click", fecharModal);
 
 modalOverlay.addEventListener("click", (event) => {
-	if(event.target === modalOverlay){
-		fecharModal();
-	}
+    if(event.target === modalOverlay){
+        fecharModal();
+    }
 })
 
-formPet.addEventListener("submit", executarCadastro);
+formPet.addEventListener("submit", ejecutarCadastro);
 
 
 // final de tudo tem que ficar renderizando
 
 renderizarFavoritos();
+renderizarPets();
 atualizarEstatisticas();
 
-function renderizarPets(){
-	console.log("isto eh somente um place holder para nao quebrar")
+function renderizarPets() {
+    if (!petsGrid) return;
+
+    petsGrid.innerHTML = "";
+
+    if (pets.length === 0) {
+        emptyState.hidden = false;
+        return;
+    }
+
+    emptyState.hidden = true;
+
+    pets.forEach(pet => {
+        
+        const ehFavorito = favoritos.some(fav => fav.id === pet.id);
+
+        const card = document.createElement("div");
+        card.className = "pet-card"; // Alinha com a classe do seu CSS
+
+        card.innerHTML = `
+            <div class="pet-card__image-container">
+                <img src="${pet.foto}" alt="Foto de ${pet.nome}" class="pet-card__img" />
+            </div>
+            <div class="pet-card__content">
+                <h3 class="pet-card__title">${pet.nome}</h3>
+                <div class="pet-card__tags">
+                    <span class="tag">${pet.especie}</span>
+                    <span class="tag">${pet.porte}</span>
+                    <span class="tag">${pet.idade}</span>
+                </div>
+                <p class="pet-card__description">${pet.descricao}</p>
+                
+                <button class="btn ${ehFavorito ? 'btn--success' : 'btn--primary'} btn-fav-action" data-id="${pet.id}">
+                    ${ehFavorito ? "Interessado" : "Tenho interesse"}
+                </button>
+            </div>
+        `;
+
+        const btnFav = card.querySelector(".btn-fav-action");
+        
+        btnFav.addEventListener("click", () => alternarFavoritoCard(pet.id));
+        
+        petsGrid.appendChild(card);
+    });
+}
+
+function alternarFavoritoCard(id){
+    const jaEhFavorito = favoritos.some(fav => fav.id === id);
+
+    if(jaEhFavorito){
+        removerFavorito(id);
+    }else{
+        addFavorito(id);
+    }
+    renderizarPets();
 }
