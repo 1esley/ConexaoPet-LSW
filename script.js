@@ -15,6 +15,7 @@ const dadosIniciais = [
         especie: "Gato",
         porte: "Pequeno",
         idade: "Filhote",
+        foto: "/images/Mimi.png",
         descricao: "Gosta de dormir no sol."
     },
     {
@@ -23,6 +24,7 @@ const dadosIniciais = [
         especie: "Cachorro",
         porte: "Pequeno",
         idade: "Idoso",
+        foto: "/images/Bolinha.png",
         descricao: "Calmo, ideal para apartamento."
     }
 ];
@@ -59,7 +61,7 @@ const favsEmpty = document.getElementById("favs-empty");
 const badgeFavs = document.getElementById("badge-favs");
 
 //seletores do modal cadastro
-const modalOverlay = document.getElementById("modalOverlay");
+const modalOverlay = document.getElementById("modal-overlay");
 const btnAbrirCadastro = document.getElementById("btn-abrir-cadastro");
 const btnFecharModal = document.getElementById("btn-fechar-modal");
 const formPet = document.getElementById("form-pet");
@@ -247,11 +249,13 @@ btnAbrirFavs.addEventListener("click", () => {
 btnFecharFavs.addEventListener("click", () => {
     sidebar.classList.remove("open");
     sidebarOverlay.hidden = true;
+    window.location.reload();
 });
 
 sidebarOverlay.addEventListener("click", () => { // esse aqui é pra fechar clicando fora da barra (no overlay)
     sidebar.classList.remove("open");
     sidebarOverlay.hidden = true;
+    window.location.reload();
 });
 
 btnAbrirCadastro.addEventListener("click", abrirModal);
