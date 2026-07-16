@@ -102,7 +102,7 @@ function limparErrosValidacao(){
 }
 
 function mostrarFeedback(mensagem, tipo = "sucesso"){
-    divFeedback.textContent = message = mensagem;
+    divFeedback.textContent = mensagem;
     divFeedback.className = 
     `feedback feedback--show ${tipo === "erro" ? "feedback--erro" : "feedback--sucesso"}`;
     setTimeout(() => {
@@ -264,6 +264,21 @@ modalOverlay.addEventListener("click", (event) => {
 })
 
 formPet.addEventListener("submit", ejecutarCadastro);
+
+// Fechar modal ou sidebar ao pressionar a tecla Esc
+document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+        // Se o modal estiver aberto, fecha
+        if (modalOverlay && !modalOverlay.hidden) {
+            fecharModal();
+        }
+        // Se a sidebar estiver aberta, fecha
+        if (sidebar && sidebar.classList.contains("open")) {
+            sidebar.classList.remove("open");
+            if (sidebarOverlay) sidebarOverlay.hidden = true;
+        }
+    }
+});
 
 
 // EVENTOS DE FILTRAGEM
