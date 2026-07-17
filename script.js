@@ -119,7 +119,7 @@ function atualizarEstatisticas(){
     if (badgeFavs) badgeFavs.textContent = favoritos.length;
 }
 
-function ejecutarCadastro(event) {
+function executarCadastro(event) {
     event.preventDefault();
     limparErrosValidacao();
 
@@ -159,7 +159,7 @@ function ejecutarCadastro(event) {
     }
 
     const novoPet = {
-        id: Date.now(), // ID numerico
+        id: Date.now(),
         nome,
         especie,
         porte,
@@ -267,7 +267,7 @@ modalOverlay.addEventListener("click", (event) => {
     }
 })
 
-formPet.addEventListener("submit", ejecutarCadastro);
+formPet.addEventListener("submit", executarCadastro);
 
 // Fechar modal ou sidebar ao pressionar a tecla Esc
 document.addEventListener("keydown", (event) => {
@@ -321,14 +321,14 @@ function renderizarPets() {
         const ehFavorito = favoritos.some(fav => fav.id === pet.id);
 
         const card = document.createElement("div");
-        card.className = "pet-card"; // Alinha com a classe do seu CSS
+        card.className = `pet-card ${ehFavorito ? 'pet-card__success' : ''}`;
 
         card.innerHTML = `
             <div class="pet-card__image-container">
                 <img src="${pet.foto}" alt="Foto de ${pet.nome}" class="pet-card__img" />
             </div>
             <div class="pet-card__content">
-                <h3 class="pet-card__title">${pet.nome}</h3>
+                <h3 class="pet-card__name">${pet.nome}</h3>
                 <div class="pet-card__tags">
                     <span class="tag">${pet.especie}</span>
                     <span class="tag">${pet.porte}</span>
