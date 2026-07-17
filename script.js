@@ -1,4 +1,4 @@
-// lista de mock data (talvez a gnt mude isso dps)
+//mock
 const dadosIniciais = [
     {
         id: 1,
@@ -6,17 +6,19 @@ const dadosIniciais = [
         especie: "Cachorro",
         porte: "Grande",
         idade: "Adulto",
-        foto: "/images/Rex.png", // isso é parte de um teste, ainda preciso saber como vai ser a inserção da foto
-        descricao: "Brincalhão e dócil."
+        foto: "/images/Rex.png",
+        descricao: "Brincalhão e dócil.",
+        adotado: false
     },
     {
         id: 2,
         nome: "Mimi",
         especie: "Gato",
-        porte: "Pequeno",
-        idade: "Filhote",
+        porte: "Médio",
+        idade: "Adulto",
         foto: "/images/Mimi.png",
-        descricao: "Gosta de dormir no sol."
+        descricao: "Gosta de dormir no sol.",
+        adotado: false
     },
     {
         id: 3,
@@ -25,7 +27,48 @@ const dadosIniciais = [
         porte: "Pequeno",
         idade: "Idoso",
         foto: "/images/Bolinha.png",
-        descricao: "Calmo, ideal para apartamento."
+        descricao: "Calmo, ideal para apartamento.",
+        adotado: false
+    },
+    {
+        id: 4,
+        nome: "Pipoca",
+        especie: "Roedores",
+        porte: "Pequeno",
+        idade: "Adulto",
+        foto: "/images/Pipoca.png",
+        descricao: "Hamster curioso e cheio de energia.",
+        adotado: false
+    },
+    {
+        id: 5,
+        nome: "Minduim",
+        especie: "Roedores",
+        porte: "Pequeno",
+        idade: "Filhote",
+        foto: "/images/Minduim.png",
+        descricao: "Filhote dócil que adora explorar.",
+        adotado: false
+    },
+    {
+        id: 6,
+        nome: "Luna",
+        especie: "Passaro",
+        porte: "Pequeno",
+        idade: "Adulto",
+        foto: "/images/Luna.png",
+        descricao: "Canário alegre que gosta de cantar pela manhã.",
+        adotado: false
+    },
+    {
+        id: 7,
+        nome: "Nemo",
+        especie: "Peixe",
+        porte: "Pequeno",
+        idade: "Adulto",
+        foto: "/images/Nemo.png",
+        descricao: "Peixinho tranquilo e fácil de cuidar.",
+        adotado: false
     }
 ];
 
@@ -34,13 +77,17 @@ let pets = JSON.parse(localStorage.getItem("pets")) || dadosIniciais;
 
 let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
 
+let adotados = JSON.parse(localStorage.getItem("adotados")) || [];
+
 function salvarDados() { // só pra garantir que a gente possa atualizar sempre que quiser
     localStorage.setItem("pets", JSON.stringify(pets));
 
     localStorage.setItem("favoritos", JSON.stringify(favoritos));
+
+    localStorage.setItem("adotados", JSON.stringify(adotados));
 }
 
-// aqui agora é CACECE, deixa essa parte só pra ir setando os elementos
+// deixa essa parte só pra ir setando os elementos
 
 const petsGrid = document.getElementById("pets-grid");
 
@@ -78,11 +125,13 @@ const textDescricao = document.getElementById("descricao");
 const divFeedback = document.getElementById("feedback");
 const statTotal = document.getElementById("stat-total");
 const statFavs = document.getElementById("stat-favs");
+const statAdocoes = document.getElementById("stat-adocoes");
 
 //seletores dos filtros
 const filtroEspecie = document.getElementById("filtro-especie");
 const filtroPorte = document.getElementById("filtro-porte");
 const filtroIdade = document.getElementById("filtro-idade");
+const btnLimpar = document.getElementById("btn-limpar");
 
 // continua com as funções aq embaixo
 // blz wesley :D
@@ -106,7 +155,7 @@ function limparErrosValidacao(){
 function mostrarFeedback(mensagem, tipo = "sucesso"){
     divFeedback.textContent = mensagem;
     divFeedback.className = 
-    `feedback feedback--show ${tipo === "erro" ? "feedback--erro" : "feedback--sucesso"}`;
+    `feedback feedback--show ${tipo === "erro" ? "feedback--error" : "feedback--success"}`;
     setTimeout(() => {
         divFeedback.textContent = "";
         divFeedback.className = "feedback";
@@ -114,12 +163,12 @@ function mostrarFeedback(mensagem, tipo = "sucesso"){
 }
 
 function atualizarEstatisticas(){
-    if (statTotal) statTotal.textContent = pets.length;
+    if (statTotal) statTotal.textContent = pets.filter(pet => !pet.adotado).length;
     if (statFavs) statFavs.textContent = favoritos.length;
     if (badgeFavs) badgeFavs.textContent = favoritos.length;
 }
 
-function ejecutarCadastro(event) {
+function executarCadastro(event) {
     event.preventDefault();
     limparErrosValidacao();
 
@@ -129,6 +178,7 @@ function ejecutarCadastro(event) {
     const idade = selectIdade.value;
     const foto = inputFoto.value.trim();
     const descricao = textDescricao.value.trim();
+    const adotado = false;
 
     let formularioValido = true;
 
@@ -159,13 +209,14 @@ function ejecutarCadastro(event) {
     }
 
     const novoPet = {
-        id: Date.now(), // ID numerico
+        id: Date.now(),
         nome,
         especie,
         porte,
         idade,
         foto: foto || "https://placehold.co/400x300?text=Sem+Foto+🐾",
-        descricao
+        descricao,
+        adotado
     };
 
     pets.push(novoPet);
@@ -198,6 +249,7 @@ function renderizarFavoritos() {
             ${pet.especie} • ${pet.idade}
             <br><br>
             <button class="btn btn--ghost" onclick="removerFavorito(${pet.id})">Remover</button>
+            <button class="btn btn--adopt" onclick="adotar(${pet.id})">Adote ❤️‍🩹</button>
         `;
 
         favsList.appendChild(item);
@@ -235,11 +287,35 @@ function removerFavorito(id) {
     // mensagem de removido
 }
 
+function adotar(id) {
+    const pet = favoritos.find(item => item.id === id);
+
+    pet.adotado = true;
+
+    favoritos = favoritos.filter(item => item.id !== id);
+    adotados.push(pet);
+
+    if (statAdocoes) statAdocoes.textContent = adotados.length;
+
+    salvarDados();
+    renderizarFavoritos();
+    atualizarEstatisticas();
+    if (pet) mostrarFeedback(`${pet.nome} foi adotado! 😍.`);
+}
+
 window.addFavorito = addFavorito;
 window.removerFavorito = removerFavorito;
 
 
-// AREA DE EVENTOS (EM TESTE AINDA)
+// AREA DE EVENTOS (a maioria vai ser botao)
+
+btnLimpar.addEventListener("click", () => {
+    filtroEspecie.value = "";
+    filtroPorte.value = "";
+    filtroIdade.value = "";
+
+    renderizarPets();
+});
 
 btnAbrirFavs.addEventListener("click", () => {
     sidebar.classList.add("open");
@@ -267,16 +343,16 @@ modalOverlay.addEventListener("click", (event) => {
     }
 })
 
-formPet.addEventListener("submit", ejecutarCadastro);
+formPet.addEventListener("submit", executarCadastro);
 
-// Fechar modal ou sidebar ao pressionar a tecla Esc
+//Fechar modal ou sidebar com Esc
 document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
-        // Se o modal estiver aberto, fecha
+        //modal aberto, fecha
         if (modalOverlay && !modalOverlay.hidden) {
             fecharModal();
         }
-        // Se a sidebar estiver aberta, fecha
+        //sidebar aberta, fecha
         if (sidebar && sidebar.classList.contains("open")) {
             sidebar.classList.remove("open");
             if (sidebarOverlay) sidebarOverlay.hidden = true;
@@ -301,13 +377,11 @@ function renderizarPets() {
     const porteSelecionado = filtroPorte ? filtroPorte.value : "";
     const idadeSelecionada = filtroIdade ? filtroIdade.value : "";
 
-    const petsFiltrados = pets.filter(pet => {
-        const bateEspecie = !especieSelecionada || pet.especie === especieSelecionada;
-        const batePorte = !porteSelecionado || pet.porte === porteSelecionado;
-        const bateIdade = !idadeSelecionada || pet.idade === idadeSelecionada;
-        
-        return bateEspecie && batePorte && bateIdade;
-    });
+    const petsFiltrados = pets
+    .filter(pet => !pet.adotado)
+    .filter(pet => !especieSelecionada || pet.especie === especieSelecionada)
+    .filter(pet => !porteSelecionado || pet.porte === porteSelecionado)
+    .filter(pet => !idadeSelecionada || pet.idade === idadeSelecionada);
 
     if (petsFiltrados.length === 0) {
         emptyState.hidden = false;
@@ -321,14 +395,14 @@ function renderizarPets() {
         const ehFavorito = favoritos.some(fav => fav.id === pet.id);
 
         const card = document.createElement("div");
-        card.className = "pet-card"; // Alinha com a classe do seu CSS
+        card.className = `pet-card ${ehFavorito ? 'pet-card__success' : ''}`;
 
         card.innerHTML = `
             <div class="pet-card__image-container">
                 <img src="${pet.foto}" alt="Foto de ${pet.nome}" class="pet-card__img" />
             </div>
             <div class="pet-card__content">
-                <h3 class="pet-card__title">${pet.nome}</h3>
+                <h3 class="pet-card__name">${pet.nome}</h3>
                 <div class="pet-card__tags">
                     <span class="tag">${pet.especie}</span>
                     <span class="tag">${pet.porte}</span>
