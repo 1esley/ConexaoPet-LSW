@@ -166,6 +166,8 @@ function atualizarEstatisticas(){
     if (statTotal) statTotal.textContent = pets.filter(pet => !pet.adotado).length;
     if (statFavs) statFavs.textContent = favoritos.length;
     if (badgeFavs) badgeFavs.textContent = favoritos.length;
+    if (statAdocoes) statAdocoes.textContent = adotados.length;
+
 }
 
 function executarCadastro(event) {
@@ -294,8 +296,6 @@ function adotar(id) {
 
     favoritos = favoritos.filter(item => item.id !== id);
     adotados.push(pet);
-
-    if (statAdocoes) statAdocoes.textContent = adotados.length;
 
     salvarDados();
     renderizarFavoritos();
