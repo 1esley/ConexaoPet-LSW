@@ -13,6 +13,7 @@
   --text-muted:   #7A869A;
   --border:       #E0E6ED;
   --error:        #E53935;
+  --error-light:  #FFEbee;
   --success:      #2E7D32;
   --radius:       12px;
   --radius-sm:    8px;
@@ -101,6 +102,7 @@ body {
 }
 
 .btn--fav-toggle { position: relative; }
+
 .btn--fav-toggle:hover { 
   border-color: var(--orange); 
   color: var(--orange-dark); 
@@ -147,6 +149,20 @@ body {
 }
 
 .btn--ghost:hover { 
+  border-color: var(--error); 
+  color: var(--error); 
+  background: var(--error-light); 
+}
+
+.btn--adopt {
+  background-color: rgba(56, 223, 56);
+  color: var(--white);
+  padding: .6rem 1rem;
+  border: 1.5px solid var(--border);
+  font-size: .85rem;
+}
+
+.btn--adopt:hover { 
   border-color: var(--green); 
   color: var(--green); 
   background: var(--green-light); 
@@ -317,8 +333,19 @@ body {
   animation: fadeIn .25s ease;
 }
 
-.fav-item__info { font-size: .9rem; font-weight: 700; }
-.fav-item__sub  { font-size: .74rem; color: var(--text-muted); font-weight: 600; margin-top: .1rem; }
+.fav-item__info { 
+  font-size: .9rem; 
+  font-weight: 700; 
+}
+
+.fav-item__sub { 
+  font-size: .74rem; 
+  color: var(--text-muted); 
+  font-weight: 600; 
+  margin-top: .1rem; 
+}
+
+
 
 .favs-empty {
   font-size: .85rem;
@@ -348,17 +375,17 @@ body {
   transition: opacity .3s, transform .3s;
   pointer-events: none;
 }
-.feedback.show { 
+.feedback--show { 
   opacity: 1; 
   transform: translateX(-50%) translateY(0); 
 }
 
-.feedback.success { 
+.feedback--success { 
   background: var(--success); 
   color: var(--white); 
 }
 
-.feedback.error { 
+.feedback--error { 
   background: var(--error);   
   color: var(--white); 
 }

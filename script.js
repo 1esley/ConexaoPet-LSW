@@ -7,16 +7,18 @@ const dadosIniciais = [
         porte: "Grande",
         idade: "Adulto",
         foto: "/images/Rex.png", // isso é parte de um teste, ainda preciso saber como vai ser a inserção da foto
-        descricao: "Brincalhão e dócil."
+        descricao: "Brincalhão e dócil.",
+        adotado: false
     },
     {
         id: 2,
         nome: "Mimi",
         especie: "Gato",
-        porte: "Pequeno",
-        idade: "Filhote",
+        porte: "Médio",
+        idade: "Adulto",
         foto: "/images/Mimi.png",
-        descricao: "Gosta de dormir no sol."
+        descricao: "Gosta de dormir no sol.",
+        adotado: false
     },
     {
         id: 3,
@@ -25,7 +27,48 @@ const dadosIniciais = [
         porte: "Pequeno",
         idade: "Idoso",
         foto: "/images/Bolinha.png",
-        descricao: "Calmo, ideal para apartamento."
+        descricao: "Calmo, ideal para apartamento.",
+        adotado: false
+    },
+    {
+        id: 4,
+        nome: "Pipoca",
+        especie: "Roedor",
+        porte: "Pequeno",
+        idade: "Adulto",
+        foto: "/images/Pipoca.png",
+        descricao: "Hamster curioso e cheio de energia.",
+        adotado: false
+    },
+    {
+        id: 5,
+        nome: "Minduim",
+        especie: "Roedor",
+        porte: "Pequeno",
+        idade: "Filhote",
+        foto: "/images/Minduim.png",
+        descricao: "Filhote dócil que adora explorar.",
+        adotado: false
+    },
+    {
+        id: 6,
+        nome: "Luna",
+        especie: "Pássaro",
+        porte: "Pequeno",
+        idade: "Adulto",
+        foto: "/images/Luna.png",
+        descricao: "Canário alegre que gosta de cantar pela manhã.",
+        adotado: false
+    },
+    {
+        id: 7,
+        nome: "Nemo",
+        especie: "Peixe",
+        porte: "Pequeno",
+        idade: "Adulto",
+        foto: "/images/Nemo.png",
+        descricao: "Peixinho tranquilo e fácil de cuidar.",
+        adotado: false
     }
 ];
 
@@ -34,10 +77,14 @@ let pets = JSON.parse(localStorage.getItem("pets")) || dadosIniciais;
 
 let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
 
+let adotados = JSON.parse(localStorage.getItem("adotados")) || [];
+
 function salvarDados() { // só pra garantir que a gente possa atualizar sempre que quiser
     localStorage.setItem("pets", JSON.stringify(pets));
 
     localStorage.setItem("favoritos", JSON.stringify(favoritos));
+
+    localStorage.setItem("adotados", JSON.stringify(adotados));
 }
 
 // aqui agora é CACECE, deixa essa parte só pra ir setando os elementos
@@ -78,6 +125,7 @@ const textDescricao = document.getElementById("descricao");
 const divFeedback = document.getElementById("feedback");
 const statTotal = document.getElementById("stat-total");
 const statFavs = document.getElementById("stat-favs");
+const statAdocoes = document.getElementById("stat-adocoes");
 
 //seletores dos filtros
 const filtroEspecie = document.getElementById("filtro-especie");
@@ -106,7 +154,7 @@ function limparErrosValidacao(){
 function mostrarFeedback(mensagem, tipo = "sucesso"){
     divFeedback.textContent = mensagem;
     divFeedback.className = 
-    `feedback feedback--show ${tipo === "erro" ? "feedback--erro" : "feedback--sucesso"}`;
+    `feedback feedback--show ${tipo === "erro" ? "feedback--error" : "feedback--success"}`;
     setTimeout(() => {
         divFeedback.textContent = "";
         divFeedback.className = "feedback";
@@ -114,7 +162,7 @@ function mostrarFeedback(mensagem, tipo = "sucesso"){
 }
 
 function atualizarEstatisticas(){
-    if (statTotal) statTotal.textContent = pets.length;
+    if (statTotal) statTotal.textContent = pets.filter(pet => !pet.adotado).length;
     if (statFavs) statFavs.textContent = favoritos.length;
     if (badgeFavs) badgeFavs.textContent = favoritos.length;
 }
@@ -129,6 +177,7 @@ function executarCadastro(event) {
     const idade = selectIdade.value;
     const foto = inputFoto.value.trim();
     const descricao = textDescricao.value.trim();
+    const adotado = false;
 
     let formularioValido = true;
 
@@ -165,7 +214,8 @@ function executarCadastro(event) {
         porte,
         idade,
         foto: foto || "https://placehold.co/400x300?text=Sem+Foto+🐾",
-        descricao
+        descricao,
+        adotado
     };
 
     pets.push(novoPet);
@@ -198,6 +248,7 @@ function renderizarFavoritos() {
             ${pet.especie} • ${pet.idade}
             <br><br>
             <button class="btn btn--ghost" onclick="removerFavorito(${pet.id})">Remover</button>
+            <button class="btn btn--adopt" onclick="adotar(${pet.id})">Adote ❤️‍🩹</button>
         `;
 
         favsList.appendChild(item);
@@ -233,6 +284,22 @@ function removerFavorito(id) {
     atualizarEstatisticas();
     if (pet) mostrarFeedback(`${pet.nome} foi removido dos favoritos.`, "erro");
     // mensagem de removido
+}
+
+function adotar(id) {
+    const pet = favoritos.find(item => item.id === id);
+
+    pet.adotado = true;
+
+    favoritos = favoritos.filter(item => item.id !== id);
+    adotados.push(pet);
+
+    if (statAdocoes) statAdocoes.textContent = adotados.length;
+
+    salvarDados();
+    renderizarFavoritos();
+    atualizarEstatisticas();
+    if (pet) mostrarFeedback(`${pet.nome} foi adotado! 😍.`);
 }
 
 window.addFavorito = addFavorito;
@@ -306,7 +373,7 @@ function renderizarPets() {
         const batePorte = !porteSelecionado || pet.porte === porteSelecionado;
         const bateIdade = !idadeSelecionada || pet.idade === idadeSelecionada;
         
-        return bateEspecie && batePorte && bateIdade;
+        return bateEspecie && batePorte && bateIdade && !pet.adotado;
     });
 
     if (petsFiltrados.length === 0) {
