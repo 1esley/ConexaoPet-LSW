@@ -6,7 +6,7 @@ const dadosIniciais = [
         especie: "Cachorro",
         porte: "Grande",
         idade: "Adulto",
-        foto: "./images/Rex.png",
+        foto: "images/Rex.png",
         descricao: "Brincalhão e dócil.",
         adotado: false
     },
@@ -16,7 +16,7 @@ const dadosIniciais = [
         especie: "Gato",
         porte: "Médio",
         idade: "Adulto",
-        foto: "./images/Mimi.png",
+        foto: "images/Mimi.png",
         descricao: "Gosta de dormir no sol.",
         adotado: false
     },
@@ -26,7 +26,7 @@ const dadosIniciais = [
         especie: "Cachorro",
         porte: "Pequeno",
         idade: "Idoso",
-        foto: "./images/Bolinha.png",
+        foto: "images/Bolinha.png",
         descricao: "Calmo, ideal para apartamento.",
         adotado: false
     },
@@ -36,7 +36,7 @@ const dadosIniciais = [
         especie: "Roedores",
         porte: "Pequeno",
         idade: "Adulto",
-        foto: "./images/Pipoca.png",
+        foto: "images/Pipoca.png",
         descricao: "Hamster curioso e cheio de energia.",
         adotado: false
     },
@@ -46,7 +46,7 @@ const dadosIniciais = [
         especie: "Roedores",
         porte: "Pequeno",
         idade: "Filhote",
-        foto: "./images/Minduim.png",
+        foto: "images/Minduim.png",
         descricao: "Filhote dócil que adora explorar.",
         adotado: false
     },
@@ -56,7 +56,7 @@ const dadosIniciais = [
         especie: "Passaro",
         porte: "Pequeno",
         idade: "Adulto",
-        foto: "./images/Luna.png",
+        foto: "images/Luna.png",
         descricao: "Canário alegre que gosta de cantar pela manhã.",
         adotado: false
     },
@@ -66,7 +66,7 @@ const dadosIniciais = [
         especie: "Peixe",
         porte: "Pequeno",
         idade: "Adulto",
-        foto: "./images/Nemo.png",
+        foto: "images/Nemo.png",
         descricao: "Peixinho tranquilo e fácil de cuidar.",
         adotado: false
     }

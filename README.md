@@ -134,11 +134,11 @@ Separação das responsabilidades em funções reutilizáveis e independentes.
 
 Projeto desenvolvido para a disciplina de **Linguagem de Script para Web**.
 
-- Equipe Conexão PET
-Douglas Rodrigues 
-Marcos Antônio
-Rafael Silva
-Wesley de Oliveira 
+### Equipe Conexão PET
+- Douglas Rodrigues.
+- Marcos Antônio.
+- Rafael Silva.
+- Wesley de Oliveira. 
 
 ---
 
