@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conexão PET — Adote um amigo</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="navbar__brand">
+      <span class="navbar__paw">🐾</span>
+      <span class="navbar__title">Conexão <strong>PET</strong></span>
+    </div>
+    <div class="navbar__actions">
+      <button class="btn btn--nav" id="btn-abrir-cadastro">
+        ➕ Cadastrar
+      </button>
+      <button class="btn btn--nav btn--fav-toggle" id="btn-abrir-favs">
+        ❤️ Favoritos
+        <span class="badge" id="badge-favs">0</span>
+      </button>
+    </div>
+  </nav>
+
+
+  <div id="feedback" class="feedback" role="alert" aria-live="polite"></div>
+
+<!-- cadastro de pets -->
+  <div class="modal-overlay" id="modal-overlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal__header">
+        <h2 class="modal__title" id="modal-title">🐾 Cadastrar novo pet</h2>
+        <button class="modal__close" id="btn-fechar-modal" aria-label="Fechar">✕</button>
+      </div>
+      <form id="form-pet" novalidate>
+        <div class="form-grid">
+          <div class="field">
+            <label for="nome">Nome <span class="required">*</span></label>
+            <input type="text" id="nome" placeholder="Ex: Rex" autocomplete="off" />
+            <span class="field__error" id="erro-nome"></span>
+          </div>
+          <div class="field">
+            <label for="especie">Espécie <span class="required">*</span></label>
+            <select id="especie">
+              <option value="">Selecione...</option>
+              <option value="Cachorro">🐶 Cachorro</option>
+              <option value="Gato">🐱 Gato</option>
+              <option value="Passaro">🐦 Pássaro</option>
+              <option value="Peixe">🐟 Peixe Ornamental</option>
+              <option value="Roedores">🐹 Roedores</option>
+            </select>
+            <span class="field__error" id="erro-especie"></span>
+          </div>
+          <div class="field">
+            <label for="porte">Porte <span class="required">*</span></label>
+            <select id="porte">
+              <option value="">Selecione...</option>
+              <option value="Pequeno">Pequeno</option>
+              <option value="Médio">Médio</option>
+              <option value="Grande">Grande</option>
+            </select>
+            <span class="field__error" id="erro-porte"></span>
+          </div>
+          <div class="field">
+            <label for="idade">Idade <span class="required">*</span></label>
+            <select id="idade">
+              <option value="">Selecione...</option>
+              <option value="Filhote">Filhote</option>
+              <option value="Adulto">Adulto</option>
+              <option value="Idoso">Idoso</option>
+            </select>
+            <span class="field__error" id="erro-idade"></span>
+          </div>
+          <div class="field field--full">
+            <label for="foto">URL da foto</label>
+            <input type="url" id="foto" placeholder="https://..." />
+          </div>
+          <div class="field field--full">
+            <label for="descricao">Descrição <span class="required">*</span></label>
+            <textarea id="descricao" rows="3" placeholder="Conte um pouco sobre o pet..."></textarea>
+            <span class="field__error" id="erro-descricao"></span>
+          </div>
+        </div>
+        <button type="submit" class="btn btn--primary">Cadastrar pet</button>
+      </form>
+    </div>
+  </div>
+
+<!-- barra lateral -->
+  <div class="sidebar-overlay" id="sidebar-overlay" hidden></div>
+  <aside class="sidebar" id="sidebar-favs" aria-label="Favoritos">
+    <div class="sidebar__header">
+      <h2 class="sidebar__title">❤️ Meus favoritos</h2>
+      <button class="sidebar__close" id="btn-fechar-favs" aria-label="Fechar favoritos">✕</button>
+    </div>
+    <ul class="favs-list" id="favs-list"></ul>
+    <p class="favs-empty" id="favs-empty">
+      Clique em "Tenho interesse" em um pet para adicioná-lo aqui.
+    </p>
+  </aside>
+
+  <main class="main">
+
+    <section class="stats" aria-label="Estatísticas">
+      <div class="stat-card">
+        <span class="stat-card__num" id="stat-total">0</span>
+        <span class="stat-card__label">Pets disponíveis</span>
+      </div>
+      <div class="stat-card stat-card--accent">
+        <span class="stat-card__num" id="stat-favs">0</span>
+        <span class="stat-card__label">Favoritos</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-card__num" id="stat-adocoes">0</span>
+        <span class="stat-card__label">Adoções realizadas</span>
+      </div>
+    </section>
+
+<!-- filtros -->
+    <section class="filter-bar" aria-label="Filtros">
+      <select id="filtro-especie" aria-label="Filtrar por espécie">
+        <option value="">🐾 Todas as espécies</option>
+        <option value="Cachorro">Cachorro</option>
+        <option value="Gato">Gato</option>
+        <option value="Passaro">Pássaros</option>
+        <option value="Peixe">Peixes</option>
+        <option value="Roedores">Roedores</option>
+      </select>
+      <select id="filtro-porte" aria-label="Filtrar por porte">
+        <option value="">📏 Todos os portes</option>
+        <option value="Pequeno">Pequeno</option>
+        <option value="Médio">Médio</option>
+        <option value="Grande">Grande</option>
+      </select>
+      <select id="filtro-idade" aria-label="Filtrar por idade">
+        <option value="">🎂 Todas as idades</option>
+        <option value="Filhote">Filhote</option>
+        <option value="Adulto">Adulto</option>
+        <option value="Idoso">Idoso</option>
+      </select>
+      <button class="btn btn--ghost" id="btn-limpar">Limpar filtros</button>
+      <span class="filter-count" id="filter-count"></span>
+    </section>
+
+<!-- seção dos pets -->
+    <section class="pets-section" aria-label="Pets disponíveis">
+      <div class="pets-grid" id="pets-grid"></div>
+      <p class="empty-state" id="empty-state" hidden>
+        Nenhum pet encontrado com esses filtros.
+      </p>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Conexão PET &copy; 2026 &mdash; <strong>Adote. Não compre.</strong> 🐾</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
