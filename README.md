@@ -14,6 +14,7 @@ O projeto busca reduzir o abandono de animais e facilitar o processo de adoção
 
 ### Cadastro de Pets
 - Cadastro de novos animais para adoção;
+- Utilização de objeto leitor de arquivos para upload de imagens;
 - Validação de formulário utilizando `preventDefault()`;
 - Feedback visual para sucesso e erro;
 - Persistência automática dos dados no navegador.
