@@ -178,7 +178,7 @@ function executarCadastro(event) {
     const especie = selectEspecie.value;
     const porte = selectPorte.value;
     const idade = selectIdade.value;
-    const foto = inputFoto.value.trim();
+    const foto = inputFoto.files[0]; // mudança importante aqui pq eu mexi na estrutura que vcs ja tinham feito la no html
     const descricao = textDescricao.value.trim();
     const adotado = false;
 
@@ -210,26 +210,39 @@ function executarCadastro(event) {
         return;
     }
 
-    const novoPet = {
-        id: Date.now(),
-        nome,
-        especie,
-        porte,
-        idade,
-        foto: foto || "https://placehold.co/400x300?text=Sem+Foto+🐾",
-        descricao,
-        adotado
+    const reader = new FileReader(); // to instanciando esse obj de leitura de arquivo
+
+    reader.onload = function (event) { // função que faz a leitura na hora de montar o pet
+
+        const novoPet = {
+            id: Date.now(),
+            nome,
+            especie,
+            porte,
+            idade,
+            foto: event.target.result,
+            descricao,
+            adotado
+        };
+    
+        pets.push(novoPet);
+        salvarDados();
+    
+        fecharModal();
+        atualizarEstatisticas();
+        renderizarPets();
+    
+        mostrarFeedback(`O pet ${nome} foi cadastrado com sucesso!`);
     };
 
-    pets.push(novoPet);
-    salvarDados();
+    if (foto) {
+        reader.readAsDataURL(foto); // se o cara inseriu a foto, o obj leitor vai ler o arquivo como um url
+    } else {
+        reader.onload( {target: {result: "https://placehold.co/400x300?text=Sem+Foto+🐾"} } ); //se nao, aqui vou modificar o target do evento pra ser aquele placeholder de que nao tem foto
+    }
 
-    fecharModal();
-    atualizarEstatisticas();
-    renderizarPets();
+};
 
-    mostrarFeedback(`O pet ${nome} foi cadastrado com sucesso!`);
-}
 
 
 function renderizarFavoritos() {
